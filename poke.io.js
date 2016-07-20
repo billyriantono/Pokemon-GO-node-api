@@ -5,14 +5,16 @@ const geocoder = require('geocoder');
 const events = require('events');
 const ProtoBuf = require('protobufjs');
 const GoogleOAuth = require('gpsoauthnode');
+const Long = require('long');
 const ByteBuffer = require('bytebuffer');
+const bignum = require('bignum');
 
 const s2 = require('simple-s2-node');
 const Logins = require('./logins');
 
 let builder = ProtoBuf.loadProtoFile('pokemon.proto');
 if (builder === null) {
-    builder = ProtoBuf.loadProtoFile('./node_modules/pokemon-go-node-api/pokemon.proto');
+    builder = ProtoBuf.loadProtoFile(__dirname + '/pokemon.proto');
 }
 
 const pokemonProto = builder.build();
@@ -197,6 +199,18 @@ function Pokeio() {
             self.playerInfo.apiEndpoint = api_endpoint;
             self.DebugPrint('[i] Received API Endpoint: ' + api_endpoint);
             return callback(null, api_endpoint);
+        });
+    };
+    
+    self.GetInventory = function(callback) {
+        var req = new RequestEnvelop.Requests(4);
+
+        api_req(self.playerInfo.apiEndpoint, self.playerInfo.accessToken, req, function(err, f_ret){
+            if(err){
+                return callback(err);
+            }
+            var inventory = ResponseEnvelop.GetInventoryResponse.decode(f_ret.payload[0]);
+            return callback(null, inventory);
         });
     };
 
