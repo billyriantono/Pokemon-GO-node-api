@@ -5,9 +5,8 @@ const geocoder = require('geocoder');
 const events = require('events');
 const ProtoBuf = require('protobufjs');
 const GoogleOAuth = require('gpsoauthnode');
-const Long = require('long');
 const ByteBuffer = require('bytebuffer');
-const bignum = require('bignum');
+const geo = require('node-geo-distance');
 
 const s2 = require('simple-s2-node');
 const Logins = require('./logins');
@@ -201,12 +200,12 @@ function Pokeio() {
             return callback(null, api_endpoint);
         });
     };
-    
-    self.GetInventory = function(callback) {
+
+    self.GetInventory = function (callback) {
         var req = new RequestEnvelop.Requests(4);
 
-        api_req(self.playerInfo.apiEndpoint, self.playerInfo.accessToken, req, function(err, f_ret){
-            if(err){
+        api_req(self.playerInfo.apiEndpoint, self.playerInfo.accessToken, req, function (err, f_ret) {
+            if (err) {
                 return callback(err);
             }
             var inventory = ResponseEnvelop.GetInventoryResponse.decode(f_ret.payload[0]);
@@ -286,6 +285,36 @@ function Pokeio() {
         });
     };
 
+    //still WIP
+    self.CatchPokemon = function (mapPokemon, normalizedHitPosition, normalizedReticleSize, spinModifier, pokeball, callback) {
+        let {apiEndpoint, accessToken} = self.playerInfo;
+        var catchPokemon = new RequestEnvelop.CatchPokemonMessage({
+            'encounter_id': mapPokemon.EncounterId,
+            'pokeball': pokeball,
+            'normalized_reticle_size': normalizedReticleSize,
+            'spawn_point_id': mapPokemon.SpawnPointId,
+            'hit_pokemon': true,
+            'spin_modifier': spinModifier,
+            'normalized_hit_position': normalizedHitPosition
+        });
+
+        var req = new RequestEnvelop.Requests(103, catchPokemon.encode().toBuffer());
+
+        api_req(apiEndpoint, accessToken, req, function (err, f_ret) {
+            console.log(f_ret);
+            if (err) {
+                return callback(err);
+            }
+            else if (!f_ret || !f_ret.payload || !f_ret.payload[0]) {
+                return callback('No result');
+            }
+
+            var catchPokemonResponse = ResponseEnvelop.CatchPokemonResponse.decode(f_ret.payload[0]);
+            callback(null, catchPokemonResponse)
+        });
+
+    }
+
     self.GetLocationCoords = function () {
         let {latitude, longitude, altitude} = self.playerInfo;
         return {latitude, longitude, altitude};
@@ -331,6 +360,10 @@ function Pokeio() {
                 callback(null, self.GetLocationCoords());
             });
         }
+    };
+
+    self.CalculateDistance = function (lat1, lon1, lat2, lon2) {
+        return geo.haversineSync({latitude: lat1, longitude: lon1}, {latitude: lat2, longitude: lon2});
     };
 }
 

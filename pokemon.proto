@@ -43,6 +43,16 @@ message RequestEnvelop {
     required double lat = 3;
     required double long = 4;
   }
+  //rpc id : 103
+  message CatchPokemonMessage {
+      required fixed64 encounter_id = 1;
+      required int32 pokeball = 2;
+      required double normalized_reticle_size = 3;
+      required string spawn_point_id = 4;
+      required bool hit_pokemon = 5;
+      required double spin_modifier = 6;
+      required double normalized_hit_position = 7;
+  }
 }
 
 message ResponseEnvelop {
@@ -87,7 +97,6 @@ message ResponseEnvelop {
     repeated NearbyPokemonProto NearbyPokemon = 11;
   }
 
-
   message WildPokemon {
     required string UniqueId = 1;
     required string PokemonId = 2;
@@ -100,7 +109,7 @@ message ResponseEnvelop {
 
 
   message MapPokemonProto {
-    required string SpawnpointId = 1;
+    required string SpawnPointId = 1;
     required fixed64 EncounterId = 2;
     required int32 PokedexTypeId = 3;
     required int64 ExpirationTimeMs = 4;
@@ -118,16 +127,22 @@ message ResponseEnvelop {
     optional int32 GuardPokemonLevel = 7;
     required bool Enabled = 8;
     // ENUM.Holoholo.Rpc.FortType FortType = 9;
-    optional int32 FortType = 9;
+    optional FortType FortType = 9;
     optional int64 GymPoints = 10;
     optional bool IsInBattle = 11;
     optional bytes ActiveFortModifier = 12;
     optional FortLureInfoProto LureInfo = 13;
     optional int64 CooldownCompleteMs = 14;
     // ENUM.Holoholo.Rpc.Sponsor.Types.FortSponsor.Sponsor Sponsor = 15;
-    optional int32 Sponsor = 15;
+    optional FortSponsor Sponsor = 15;
     // ENUM.Holoholo.Rpc.RenderingType.Types.FortRenderingType.RenderingType RenderingType = 16;
     optional int32 RenderingType = 16;
+  }
+
+  enum FortSponsor {
+      UNSET_SPONSOR = 0;
+      MCDONALDS = 1;
+      POKEMON_STORE = 2;
   }
 
    //based on : https://github.com/AHAAAAAAA/PokemonGo-Map/blob/master/pokemon.proto
@@ -212,25 +227,25 @@ message ResponseEnvelop {
       optional int32 amount = 2;
     }
   }
-  
+
   message GetInventoryResponse {
       optional bool success = 1;
       optional InventoryDelta inventory_delta = 2;
-      
+
   }
-  
+
   message InventoryDelta {
       optional int64 original_timestamp_ms = 1;
       optional int64 new_timestamp_ms = 2;
       repeated InventoryItem inventory_items = 3;
   }
-  
+
   message InventoryItem {
       optional int64 modified_timestamp_ms = 1;
       optional int64 deleted_item_key = 2;
       optional InventoryItemData inventory_item_data = 3;
   }
-  
+
   message InventoryItemData {
       optional PokemonData pokemon = 1;
       optional Item item = 2;
@@ -243,7 +258,7 @@ message ResponseEnvelop {
       optional EggIncubators egg_incubators = 9;
       optional PokemonFamily pokemon_family = 10;
   }
-  
+
   message PokemonData {
       optional fixed64 id = 1;
       optional PokemonId pokemon_id = 2;
@@ -276,7 +291,7 @@ message ResponseEnvelop {
       optional string nickname = 30;
       optional int32 from_fort = 31;
   }
-  
+
   message Pokemon {
       optional int32 id = 1;
       optional PokemonId pokemon_type = 2;
@@ -308,9 +323,9 @@ message ResponseEnvelop {
       optional int32 favorite = 29;
       optional string nickname = 30;
       optional int32 from_fort = 31;
-      
+
   }
-  
+
   enum  PokemonMove {
       MOVE_UNSET = 0;
       THUNDER_SHOCK = 1;
@@ -493,7 +508,7 @@ message ResponseEnvelop {
       FIRE_FANG_FAST = 240;
       ROCK_SMASH_FAST = 241;
   }
-  
+
   enum PokemonId {
       MISSINGNO = 0;
       BULBASAUR = 1;
@@ -648,13 +663,13 @@ message ResponseEnvelop {
       MEWTWO = 150;
       MEW = 151;
   }
-  
+
   message Item {
       optional ItemType item = 1;
       optional int32 count = 2;
       optional bool unseen = 3;
   }
-  
+
   enum ItemType {
       ITEM_TYPE_NONE = 0;
       ITEM_TYPE_POKEBALL = 1;
@@ -670,7 +685,7 @@ message ResponseEnvelop {
       ITEM_TYPE_XP_BOOST = 11;
       ITEM_TYPE_INVENTORY_UPGRADE = 12;
   }
-  
+
   message PokedexEntry {
       optional int32 pokedex_entry_number = 1;
       optional int32 times_encountered = 2;
@@ -678,7 +693,7 @@ message ResponseEnvelop {
       optional int32 evolution_stone_pieces = 4;
       optional int32 evolution_stones = 5;
   }
-  
+
   message PlayerStats {
       optional int32 level = 1;
       optional int64 experience = 2;
@@ -704,7 +719,7 @@ message ResponseEnvelop {
       optional bytes pokemon_caught_by_type = 22; // TODO: repeated PokemonType ??
       optional int32 small_rattata_caught = 23;
   }
-  
+
   message PlayerCurrency {
       optional int32 gems = 1;
   }
@@ -879,5 +894,59 @@ message ResponseEnvelop {
       FAMILY_MEWTWO = 150;
       FAMILY_MEW = 151;
   }
-  
+
+  enum FortType {
+      GYM = 0;
+      CHECKPOINT = 1;
+  }
+
+  message CatchPokemonResponse {
+      optional CatchStatus Status = 1;
+      optional double MissPercent = 2;
+      optional uint64 CapturedPokemonId = 3;
+      optional CaptureAward CaptureAward = 4;
+
+      enum CatchStatus {
+          CATCH_ERROR = 0;
+          CATCH_SUCCESS = 1;
+          CATCH_ESCAPE = 2;
+          CATCH_FLEE = 3;
+          CATCH_MISSED = 4;
+      }
+  }
+
+  enum ActivityType {
+      ACTIVITY_UNKNOWN = 0;
+      ACTIVITY_CATCH_POKEMON = 1;
+      ACTIVITY_CATCH_LEGEND_POKEMON = 2;
+      ACTIVITY_FLEE_POKEMON = 3;
+      ACTIVITY_DEFEAT_FORT = 4;
+      ACTIVITY_EVOLVE_POKEMON = 5;
+      ACTIVITY_HATCH_EGG = 6;
+      ACTIVITY_WALK_KM = 7;
+      ACTIVITY_POKEDEX_ENTRY_NEW = 8;
+      ACTIVITY_CATCH_FIRST_THROW = 9;
+      ACTIVITY_CATCH_NICE_THROW = 10;
+      ACTIVITY_CATCH_GREAT_THROW = 11;
+      ACTIVITY_CATCH_EXCELLENT_THROW = 12;
+      ACTIVITY_CATCH_CURVEBALL = 13;
+      ACTIVITY_CATCH_FIRST_CATCH_OF_DAY = 14;
+      ACTIVITY_CATCH_MILESTONE = 15;
+      ACTIVITY_TRAIN_POKEMON = 16;
+      ACTIVITY_SEARCH_FORT = 17;
+      ACTIVITY_RELEASE_POKEMON = 18;
+      ACTIVITY_HATCH_EGG_SMALL_BONUS = 19;
+      ACTIVITY_HATCH_EGG_MEDIUM_BONUS = 20;
+      ACTIVITY_HATCH_EGG_LARGE_BONUS = 21;
+      ACTIVITY_DEFEAT_GYM_DEFENDER = 22;
+      ACTIVITY_DEFEAT_GYM_LEADER = 23;
+  }
+
+  message CaptureAward {
+      repeated ActivityType ActivityType = 1;
+      repeated int32 XP = 2;
+      repeated int32 Candy = 3;
+      repeated int32 Stardust = 4;
+  }
+
 }
