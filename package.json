@@ -1,11 +1,12 @@
 {
   "name": "pokemon-go-node-api",
-  "version": "1.2.2",
+  "version": "1.2.5",
   "description": "Pokemon GO node.js module",
   "author": "Arm4x",
   "license": "MIT",
   "main": "poke.io.js",
   "dependencies": {
+    "bignum": "^0.12.5",
     "events": "^1.1.1",
     "geocoder": "^0.2.2",
     "gpsoauthnode": "^0.0.5",
