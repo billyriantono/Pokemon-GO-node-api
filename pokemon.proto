@@ -48,10 +48,17 @@ message RequestEnvelop {
       required fixed64 encounter_id = 1;
       required int32 pokeball = 2;
       required double normalized_reticle_size = 3;
-      required string spawn_point_id = 4;
+      required string spawnpoint_id = 4;
       required bool hit_pokemon = 5;
       required double spin_modifier = 6;
       required double normalized_hit_position = 7;
+  }
+
+  message EncounterMessage {
+      required fixed64 encounter_id = 1;
+      required string spawnpoint_id = 2;
+      required double player_latitude = 3;
+      required double player_longitude = 4;
   }
 }
 
@@ -93,7 +100,7 @@ message ResponseEnvelop {
     optional bool IsTruncatedList = 7;
     repeated PokemonSummaryFortProto FortSummary = 8;
     repeated ClientSpawnPointProto DecimatedSpawnPoint = 9;
-    repeated MapPokemonProto MapPokemon = 10;
+    repeated MapPokemonProto CatchablePokemon = 10;
     repeated NearbyPokemonProto NearbyPokemon = 11;
   }
 
