@@ -60,6 +60,15 @@ message RequestEnvelop {
       required double player_latitude = 3;
       required double player_longitude = 4;
   }
+
+  message FortSearchMessage {
+	  required string fort_id = 1;
+	  required double player_latitude = 2;
+	  required double player_longitude = 3;
+	  required double fort_latitude = 4;
+	  required double fort_longitude = 5;
+}
+
 }
 
 message ResponseEnvelop {
@@ -191,7 +200,7 @@ message ResponseEnvelop {
   message Profile {
     required int64 creation_time = 1;
     optional string username = 2;
-    optional int32 team = 5;
+    optional PlayerTeam team = 5;
     optional bytes tutorial = 7;
     optional AvatarDetails avatar = 8;
     optional int32 poke_storage = 9;
@@ -222,7 +231,16 @@ message ResponseEnvelop {
       required string type = 1;
       optional int32 amount = 2;
     }
+
+    enum PlayerTeam {
+     TEAM_NONE = 0;
+	 TEAM_MYSTIC = 1;
+	 TEAM_VALOR = 2;
+	 TEAM_INSTINCT = 3;
+    }
   }
+
+
 
   message GetInventoryResponse {
       optional bool success = 1;
@@ -973,4 +991,29 @@ message ResponseEnvelop {
           POKEMON_INVENTORY_FULL = 7;
       }
   }
+
+
+message ItemAward {
+	required ItemId ItemId = 1;
+	optional int32 ItemCount = 2;
+}
+
+
+  message FortSearchResponse {
+	required Result result = 1;
+	repeated ItemAward items_awarded = 2;
+	optional int32 gems_awarded = 3;
+	optional PokemonData pokemon_data_egg = 4;
+	optional int32 experience_awarded = 5;
+	optional int64 cooldown_complete_timestamp_ms = 6;
+	optional int32 chain_hack_sequence_number = 7;
+
+	enum Result {
+		NO_RESULT_SET = 0;
+		SUCCESS = 1;
+		OUT_OF_RANGE = 2;
+		IN_COOLDOWN_PERIOD = 3;
+		INVENTORY_FULL = 4;
+	}
+}
 }
