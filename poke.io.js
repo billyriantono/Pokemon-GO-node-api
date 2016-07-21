@@ -200,11 +200,11 @@ function Pokeio() {
         });
     };
 
-    self.GetInventory = function (callback) {
+    self.GetInventory = function(callback) {
         var req = new RequestEnvelop.Requests(4);
 
-        api_req(self.playerInfo.apiEndpoint, self.playerInfo.accessToken, req, function (err, f_ret) {
-            if (err) {
+        api_req(self.playerInfo.apiEndpoint, self.playerInfo.accessToken, req, function(err, f_ret){
+            if(err){
                 return callback(err);
             }
             var inventory = ResponseEnvelop.GetInventoryResponse.decode(f_ret.payload[0]);
@@ -337,7 +337,7 @@ function Pokeio() {
         });
 
     }
-
+    
     self.GetLocationCoords = function () {
         let {latitude, longitude, altitude} = self.playerInfo;
         return {latitude, longitude, altitude};
