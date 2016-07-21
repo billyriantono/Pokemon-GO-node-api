@@ -11,10 +11,9 @@
     "geocoder": "^0.2.2",
     "gpsoauthnode": "^0.0.5",
     "istanbul": "^0.4.4",
-    "node-geo-distance": "^1.2.0",
     "protobufjs": "^5.0.1",
     "request": "^2.73.0",
-    "simple-s2-node": "^0.0.2",
+    "s2geometry-node": "^1.1.0",
     "tape": "^4.6.0"
   },
   "devDependencies": {},

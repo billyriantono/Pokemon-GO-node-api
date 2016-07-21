@@ -104,17 +104,6 @@ message ResponseEnvelop {
     repeated NearbyPokemonProto NearbyPokemon = 11;
   }
 
-  message WildPokemon {
-    required string UniqueId = 1;
-    required string PokemonId = 2;
-    // int64 three = 3;
-    // float four = 4;
-    // int32 five = 5;
-    // unknown six = 6;
-    repeated NearbyPokemonProto pokemon = 11;
-  }
-
-
   message MapPokemonProto {
     required string SpawnPointId = 1;
     required fixed64 EncounterId = 2;
@@ -910,7 +899,7 @@ message ResponseEnvelop {
   message CatchPokemonResponse {
       optional CatchStatus Status = 1;
       optional double MissPercent = 2;
-      optional uint64 CapturedPokemonId = 3;
+        // optional uint64 CapturedPokemonId = 3;
       optional CaptureAward CaptureAward = 4;
 
       enum CatchStatus {
@@ -956,4 +945,32 @@ message ResponseEnvelop {
       repeated int32 Stardust = 4;
   }
 
+  message CaptureProbability {
+      repeated ItemId PokeballType = 1;
+      repeated float CaptureProbability = 2;
+      optional float ReticleDifficultySize = 12;
+  }
+
+  message EncounterResponse {
+      optional WildPokemonProto WildPokemon = 1;
+      optional Background EncounterBackground = 2;
+      optional Status EncounterStatus = 3;
+      //optional CaptureProbability EncounterCaptureProbability = 4;
+
+      enum Background {
+          PARK = 0;
+          DESERT = 1;
+      }
+
+      enum Status {
+          ENCOUNTER_ERROR = 0;
+          ENCOUNTER_SUCCESS = 1;
+          ENCOUNTER_NOT_FOUND = 2;
+          ENCOUNTER_CLOSED = 3;
+          ENCOUNTER_POKEMON_FLED = 4;
+          ENCOUNTER_NOT_IN_RANGE = 5;
+          ENCOUNTER_ALREADY_HAPPENED = 6;
+          POKEMON_INVENTORY_FULL = 7;
+      }
+  }
 }
