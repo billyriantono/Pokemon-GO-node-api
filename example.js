@@ -33,5 +33,18 @@ Pokeio.init(username, password, location, provider, function(err) {
         console.log('[i] Pokecoin: ' + poke);
         console.log('[i] Stardust: ' + profile.currency[1].amount);
 
+
+        Pokeio.Heartbeat(function(err,hb) {
+            if(err) {
+                console.log(err);
+            }
+
+            for (var i = hb.cells.length - 1; i >= 0; i--) {
+                var current = hb.cells[i].Fort;
+                console.log(current);
+            }
+
+        });
+
     });
 });
