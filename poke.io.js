@@ -308,10 +308,10 @@ function Pokeio() {
             }
 
             var catchPokemonResponse = ResponseEnvelop.CatchPokemonResponse.decode(f_ret.payload[0]);
-            callback(null, catchPokemonResponse)
+            callback(null, catchPokemonResponse);
         });
 
-    }
+    };
 
     self.EncounterPokemon = function (catchablePokemon, callback) {
         let {apiEndpoint, accessToken, latitude, longitude} = self.playerInfo;
@@ -333,10 +333,10 @@ function Pokeio() {
             }
 
             var catchPokemonResponse = ResponseEnvelop.EncounterResponse.decode(f_ret.payload[0]);
-            callback(null, catchPokemonResponse)
+            callback(null, catchPokemonResponse);
         });
 
-    }
+    };
     
     self.GetLocationCoords = function () {
         let {latitude, longitude, altitude} = self.playerInfo;
