@@ -950,7 +950,7 @@ message ResponseEnvelop {
       optional WildPokemonProto WildPokemon = 1;
       optional Background EncounterBackground = 2;
       optional Status EncounterStatus = 3;
-      //optional CaptureProbability EncounterCaptureProbability = 4;
+      //optional int32 EncounterCaptureProbability = 4;
 
       enum Background {
           PARK = 0;
