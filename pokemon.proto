@@ -877,7 +877,7 @@ message ResponseEnvelop {
       optional CatchStatus Status = 1;
       optional double MissPercent = 2;
         // optional uint64 CapturedPokemonId = 3;
-      optional CaptureAward CaptureAward = 4;
+      //optional CaptureAward CaptureAward = 4;
 
       enum CatchStatus {
           CATCH_ERROR = 0;
@@ -916,7 +916,7 @@ message ResponseEnvelop {
   }
 
   message CaptureAward {
-      repeated ActivityType ActivityType = 1;
+      repeated int32 ActivityType = 1;
       repeated int32 XP = 2;
       repeated int32 Candy = 3;
       repeated int32 Stardust = 4;

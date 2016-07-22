@@ -3,3 +3,8 @@ node_modules
 
 # Istanbul coverage report
 coverage
+
+.idea
+.vscode
+
+ownexample.js
