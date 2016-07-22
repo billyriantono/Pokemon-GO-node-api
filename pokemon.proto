@@ -43,6 +43,7 @@ message RequestEnvelop {
     required double lat = 3;
     required double long = 4;
   }
+
   //rpc id : 103
   message CatchPokemonMessage {
       required fixed64 encounter_id = 1;
@@ -60,15 +61,6 @@ message RequestEnvelop {
       required double player_latitude = 3;
       required double player_longitude = 4;
   }
-
-  message FortSearchMessage {
-	  required string fort_id = 1;
-	  required double player_latitude = 2;
-	  required double player_longitude = 3;
-	  required double fort_latitude = 4;
-	  required double fort_longitude = 5;
-}
-
 }
 
 message ResponseEnvelop {
@@ -109,12 +101,12 @@ message ResponseEnvelop {
     optional bool IsTruncatedList = 7;
     repeated PokemonSummaryFortProto FortSummary = 8;
     repeated ClientSpawnPointProto DecimatedSpawnPoint = 9;
-    repeated MapPokemonProto CatchablePokemon = 10;
+    repeated MapPokemonProto MapPokemon = 10;
     repeated NearbyPokemonProto NearbyPokemon = 11;
   }
 
   message MapPokemonProto {
-    required string SpawnPointId = 1;
+    required string SpawnpointId = 1;
     required fixed64 EncounterId = 2;
     required int32 PokedexTypeId = 3;
     required int64 ExpirationTimeMs = 4;
@@ -132,22 +124,16 @@ message ResponseEnvelop {
     optional int32 GuardPokemonLevel = 7;
     required bool Enabled = 8;
     // ENUM.Holoholo.Rpc.FortType FortType = 9;
-    optional FortType FortType = 9;
+    optional int32 FortType = 9;
     optional int64 GymPoints = 10;
     optional bool IsInBattle = 11;
     optional bytes ActiveFortModifier = 12;
     optional FortLureInfoProto LureInfo = 13;
     optional int64 CooldownCompleteMs = 14;
     // ENUM.Holoholo.Rpc.Sponsor.Types.FortSponsor.Sponsor Sponsor = 15;
-    optional FortSponsor Sponsor = 15;
+    optional int32 Sponsor = 15;
     // ENUM.Holoholo.Rpc.RenderingType.Types.FortRenderingType.RenderingType RenderingType = 16;
     optional int32 RenderingType = 16;
-  }
-
-  enum FortSponsor {
-      UNSET_SPONSOR = 0;
-      MCDONALDS = 1;
-      POKEMON_STORE = 2;
   }
 
    //based on : https://github.com/AHAAAAAAA/PokemonGo-Map/blob/master/pokemon.proto
@@ -200,7 +186,7 @@ message ResponseEnvelop {
   message Profile {
     required int64 creation_time = 1;
     optional string username = 2;
-    optional PlayerTeam team = 5;
+    optional int32 team = 5;
     optional bytes tutorial = 7;
     optional AvatarDetails avatar = 8;
     optional int32 poke_storage = 9;
@@ -231,16 +217,7 @@ message ResponseEnvelop {
       required string type = 1;
       optional int32 amount = 2;
     }
-
-    enum PlayerTeam {
-     TEAM_NONE = 0;
-	 TEAM_MYSTIC = 1;
-	 TEAM_VALOR = 2;
-	 TEAM_INSTINCT = 3;
-    }
   }
-
-
 
   message GetInventoryResponse {
       optional bool success = 1;
@@ -918,7 +895,7 @@ message ResponseEnvelop {
       optional CatchStatus Status = 1;
       optional double MissPercent = 2;
         // optional uint64 CapturedPokemonId = 3;
-      optional CaptureAward CaptureAward = 4;
+      //optional CaptureAward CaptureAward = 4;
 
       enum CatchStatus {
           CATCH_ERROR = 0;
@@ -957,7 +934,7 @@ message ResponseEnvelop {
   }
 
   message CaptureAward {
-      repeated ActivityType ActivityType = 1;
+      repeated int32 ActivityType = 1;
       repeated int32 XP = 2;
       repeated int32 Candy = 3;
       repeated int32 Stardust = 4;
@@ -991,29 +968,4 @@ message ResponseEnvelop {
           POKEMON_INVENTORY_FULL = 7;
       }
   }
-
-
-message ItemAward {
-	required ItemId ItemId = 1;
-	optional int32 ItemCount = 2;
-}
-
-
-  message FortSearchResponse {
-	required Result result = 1;
-	repeated ItemAward items_awarded = 2;
-	optional int32 gems_awarded = 3;
-	optional PokemonData pokemon_data_egg = 4;
-	optional int32 experience_awarded = 5;
-	optional int64 cooldown_complete_timestamp_ms = 6;
-	optional int32 chain_hack_sequence_number = 7;
-
-	enum Result {
-		NO_RESULT_SET = 0;
-		SUCCESS = 1;
-		OUT_OF_RANGE = 2;
-		IN_COOLDOWN_PERIOD = 3;
-		INVENTORY_FULL = 4;
-	}
-}
 }
