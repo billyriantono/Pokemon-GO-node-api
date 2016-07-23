@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 var PokemonGO = require('./poke.io.js');
 
 // using var so you can login with multiple users
