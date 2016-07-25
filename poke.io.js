@@ -385,8 +385,6 @@ function Pokeio() {
         var accessToken = self.playerInfo.accessToken;
         var latitude = self.playerInfo.latitude;
         var longitude = self.playerInfo.longitude;
-
-        console.log(pokemon);
         var req =
             [{
                 request_type: 'ENCOUNTER',
