@@ -399,14 +399,13 @@ function Pokeio() {
         };
 
         var encounterbuffer = proto.serialize(encountermessage, "POGOProtos.Networking.Requests.Messages.EncounterMessage");
-        var requests = [
+        var req = [
             {
                 request_type: "ENCOUNTER",
                 request_message: encounterbuffer
             }
         ];
 
-        var req = new RequestEnvelop.Requests(102, encounterPokemon.encode().toBuffer());
 
         api_req(apiEndpoint, accessToken, req, function (err, f_ret) {
             if (err) {
