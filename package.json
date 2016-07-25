@@ -10,7 +10,7 @@
     "geocoder": "^0.2.2",
     "gpsoauthnode": "^0.0.5",
     "istanbul": "^0.4.4",
-    "pokemongo-protobuf": "^1.6.0",
+    "pokemongo-protobuf": "https://github.com/billyriantono/pokemon-go-protobuf-node.git#master",
     "request": "^2.73.0",
     "s2geometry-node": "^1.1.0",
     "tape": "^4.6.0"

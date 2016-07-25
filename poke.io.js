@@ -119,8 +119,6 @@ function Pokeio() {
             }
             try {
                 var f_ret = proto.parse(body, "POGOProtos.Networking.Envelopes.ResponseEnvelope");
-                //var f_ret = proto.serialize(data,  "POGOProtos.Networking.Envelopes.ResponseEnvelope");
-
             } catch (e) {
                 if (e.decoded) {
                     // Truncated
@@ -347,7 +345,7 @@ function Pokeio() {
     }
 
     //still WIP
-    self.CatchPokemon = function (mapPokemon, normalizedHitPosition, normalizedReticleSize, spinModifier, pokeball, callback) {
+    self.CatchPokemon = function (pokemon, normalizedHitPosition, normalizedReticleSize, spinModifier, pokeball, callback) {
         var _self$playerInfo3 = self.playerInfo;
         var apiEndpoint = _self$playerInfo3.apiEndpoint;
         var accessToken = _self$playerInfo3.accessToken;
@@ -356,17 +354,16 @@ function Pokeio() {
             {
                 request_type: "CATCH_POKEMON",
                 request_message: proto.serialize({
-                    encounter_id: mapPokemon.encounter_id,
+                    encounter_id: pokemon.encounter_id,
                     pokeball: pokeball,
                     normalized_reticle_size: normalizedReticleSize,
-                    spawn_point_guid: mapPokemon.spawn_point_id,
+                    spawn_point_id: pokemon.spawn_point_id,
                     hit_pokemon: true,
                     spin_modifier: spinModifier,
                     normalized_hit_position: normalizedHitPosition,
                 }, "POGOProtos.Networking.Requests.Messages.CatchPokemonMessage")
             }
         ];
-
 
         api_req(apiEndpoint, accessToken, req, function (err, f_ret) {
             if (err) {
@@ -383,29 +380,23 @@ function Pokeio() {
         });
     };
 
-    self.EncounterPokemon = function (catchablePokemon, callback) {
-        var _self$playerInfo4 = self.playerInfo;
-        var apiEndpoint = _self$playerInfo4.apiEndpoint;
-        var accessToken = _self$playerInfo4.accessToken;
-        var latitude = _self$playerInfo4.latitude;
-        var longitude = _self$playerInfo4.longitude;
+    self.EncounterPokemon = function (pokemon, callback) {
+        var apiEndpoint = self.playerInfo.apiEndpoint;
+        var accessToken = self.playerInfo.accessToken;
+        var latitude = self.playerInfo.latitude;
+        var longitude = self.playerInfo.longitude;
 
-
-        var encountermessage = {
-            encounter_id: catchablePokemon.encounter_id,
-            spawn: catchablePokemon.spawn_point_id,
-            player_latitude: latitude,
-            player_longitude: longitude,
-        };
-
-        var encounterbuffer = proto.serialize(encountermessage, "POGOProtos.Networking.Requests.Messages.EncounterMessage");
-        var req = [
-            {
-                request_type: "ENCOUNTER",
-                request_message: encounterbuffer
-            }
-        ];
-
+        console.log(pokemon);
+        var req =
+            [{
+                request_type: 'ENCOUNTER',
+                request_message: proto.serialize({
+                    encounter_id: pokemon.encounter_id,
+                    spawn_point_id: pokemon.spawn_point_id,
+                    player_latitude: latitude,
+                    player_longitude: longitude
+                }, "POGOProtos.Networking.Requests.Messages.EncounterMessage")
+            }];
 
         api_req(apiEndpoint, accessToken, req, function (err, f_ret) {
             if (err) {
