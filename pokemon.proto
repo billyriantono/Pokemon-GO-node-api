@@ -53,6 +53,14 @@ message RequestEnvelop {
     required double spin_modifier = 6;
     required double normalized_hit_position = 7;
    }
+   
+  message EvolvePokemonMessage {
+    required fixed64 PokemonId = 1;
+  }
+  
+  message TransferPokemonMessage {
+    required fixed64 PokemonId = 1;
+  }
 
   message EncounterMessage {
     repeated fixed64 encounter_id = 1;
@@ -62,17 +70,29 @@ message RequestEnvelop {
   }
 
   message FortSearchMessage {
-	required string fort_id = 1;
-	required double player_latitude = 2;
-	required double player_longitude = 3;
-	required double fort_latitude = 4;
+	  required string fort_id = 1;
+	  required double player_latitude = 2;
+	  required double player_longitude = 3;
+	  required double fort_latitude = 4;
     required double fort_longitude = 5;
   }
+
+	message FortDetailsRequest
+	{
+  	required string fort_id = 1;
+ 	  required double fort_latitude = 2;
+    required double fort_longitude = 3;
+	}
 
   //rpc id : 137
   message RecycleInventoryItemMessage {
       required int32 item_id = 1;
       required int32 count = 2;
+  }
+  
+  message ReleasePokemonMessage {
+    optional fixed64 pokemon_id = 1;
+    repeated fixed64 pokemon_ids = 2;
   }
 }
 
@@ -119,7 +139,7 @@ message ResponseEnvelop {
   }
 
   message MapPokemonProto {
-    required string SpawnpointId = 1;
+    required string SpawnPointId = 1;
     required fixed64 EncounterId = 2;
     required int32 PokedexTypeId = 3;
     required int64 ExpirationTimeMs = 4;
@@ -265,35 +285,35 @@ message ResponseEnvelop {
 
   message PokemonData {
       optional fixed64 id = 1;
-      optional PokemonId pokemon_id = 2;
-      optional int32 cp = 3;
-      optional int32 stamina = 4;
-      optional int32 stamina_max = 5;
-      optional PokemonMove move_1 = 6;
-      optional PokemonMove move_2 = 7;
-      optional int32 deployed_fort_id = 8;
-      optional string owner_name = 9;
-      optional bool is_egg = 10;
-      optional int32 egg_km_walked_target = 11;
-      optional int32 egg_km_walked_start = 12;
-      optional int32 origin = 14;
-      optional float height_m = 15;
-      optional float weight_kg = 16;
-      optional int32 individual_attack = 17;
-      optional int32 individual_defense = 18;
-      optional int32 individual_stamina = 19;
-      optional float cp_multiplier = 20;
-      optional int32 pokeball = 21;
-      optional uint64 captured_cell_id = 22;
-      optional int32 battles_attacked = 23;
-      optional int32 battles_defended = 24;
-      optional int32 egg_incubator_id = 25;
-      optional uint64 creation_time_ms = 26;
-      optional int32 num_upgrades = 27;
-      optional int32 additional_cp_multiplier = 28;
-      optional int32 favorite = 29;
-      optional string nickname = 30;
-      optional int32 from_fort = 31;
+    	optional PokemonId pokemon_id = 2;
+    	optional int32 cp = 3;
+    	optional int32 stamina = 4;
+    	optional int32 stamina_max = 5;
+    	optional PokemonMove move_1 = 6;
+    	optional PokemonMove move_2 = 7;
+    	optional int32 deployed_fort_id = 8;
+    	optional string owner_name = 9;
+    	optional bool is_egg = 10;
+    	optional double egg_km_walked_target = 11;
+    	optional double egg_km_walked_start = 12;
+    	optional int32 origin = 14;
+    	optional float height_m = 15;
+    	optional float weight_kg = 16;
+    	optional int32 individual_attack = 17;
+    	optional int32 individual_defense = 18;
+    	optional int32 individual_stamina = 19;
+    	optional float cp_multiplier = 20;
+    	optional ItemId pokeball = 21;
+    	optional uint64 captured_cell_id = 22;
+    	optional int32 battles_attacked = 23;
+    	optional int32 battles_defended = 24;
+    	optional string egg_incubator_id = 25;
+    	optional uint64 creation_time_ms = 26;
+    	optional int32 num_upgrades = 27;
+    	optional float additional_cp_multiplier = 28;
+    	optional int32 favorite = 29;
+    	optional string nickname = 30;
+    	optional int32 from_fort = 31;
   }
 
   message Pokemon {
@@ -328,6 +348,13 @@ message ResponseEnvelop {
       optional string nickname = 30;
       optional int32 from_fort = 31;
 
+  }
+  
+  enum TeamColor {
+    NEUTRAL = 0;
+    BLUE = 1;
+    RED = 2;
+    YELLOW = 3;
   }
 
   enum  PokemonMove {
@@ -905,10 +932,10 @@ message ResponseEnvelop {
   }
 
   message CatchPokemonResponse {
-      optional CatchStatus Status = 1;
+      required CatchStatus Status = 1;
       optional double MissPercent = 2;
-      optional PokemonId CapturedPokemonId = 3;
-      optional CaptureAward CaptureAward = 4;
+      //optional uint64 CapturedPokemonId = 3;
+      //optional CaptureAward CaptureAward = 4;
 
       enum CatchStatus {
           CATCH_ERROR = 0;
@@ -983,21 +1010,43 @@ message ResponseEnvelop {
   }
 
   message FortSearchResponse {
-	optional Result result = 1;
-	repeated ItemAward items_awarded = 2;
-	optional int32 gems_awarded = 3;
-	optional PokemonData pokemon_data_egg = 4;
-	optional int32 experience_awarded = 5;
-	optional int64 cooldown_complete_timestamp_ms = 6;
-	optional int32 chain_hack_sequence_number = 7;
+  	optional Result result = 1;
+  	repeated ItemAward items_awarded = 2;
+  	optional int32 gems_awarded = 3;
+  	optional PokemonData pokemon_data_egg = 4;
+  	optional int32 experience_awarded = 5;
+  	optional int64 cooldown_complete_timestamp_ms = 6;
+  	optional int32 chain_hack_sequence_number = 7;
+  
+  	enum Result {
+  		NO_RESULT_SET = 0;
+  		SUCCESS = 1;
+  		OUT_OF_RANGE = 2;
+  		IN_COOLDOWN_PERIOD = 3;
+  		INVENTORY_FULL = 4;
+	  }
+  }
 
-	enum Result {
-		NO_RESULT_SET = 0;
-		SUCCESS = 1;
-		OUT_OF_RANGE = 2;
-		IN_COOLDOWN_PERIOD = 3;
-		INVENTORY_FULL = 4;
-	}
+  message FortDetailsResponse {
+    optional string fort_id = 1;
+    optional TeamColor team_color = 2;
+    optional PokemonData pokemon_data = 3;
+    optional string name = 4;
+    repeated string image_urls = 5;
+    optional int32 fp = 6;
+    optional int32 stamina = 7;
+    optional int32 max_stamina = 8;
+    optional int32 type = 9;
+    optional double latitude = 10;
+    optional double longitude = 11;
+    optional string description = 12;
+    repeated FortModifier modifiers = 13;
+  }
+
+  message FortModifier {
+    optional ItemId item_id = 1;
+    optional int64 expiration_timestamp_ms = 2;
+    optional string deployer_player_codename = 3;
   }
 
   message RecycleInventoryItemResponse {
@@ -1015,5 +1064,39 @@ message ResponseEnvelop {
   message ItemAward {
 	optional ItemId item_id = 1;
 	optional int32 item_count = 2;
+  }
+  
+  message ReleasePokemonResponse {
+    required ReleaseStatus Status = 1;
+    optional int32 CandyAwarded = 2;
+    enum ReleaseStatus {
+      UNSET = 0;
+      SUCCESS = 1;
+      POKEMON_DEPLOYED = 2;
+      FAILED = 3;
+      ERROR_POKEMON_IS_EGG = 4;
+    }
+  }
+ 
+  message EvolvePokemonResponse 
+  {
+    optional EvolvePokemonStatus Result = 1;
+    optional Pokemon EvolvedPokemon = 2;
+    optional int32 ExpAwarded = 3;
+    optional int32 CandyAwarded = 4;
+
+  	enum EvolvePokemonStatus {
+  		POKEMON_EVOLVED_UNSET = 0;
+  		POKEMON_EVOLVED_SUCCESS = 1;
+  		FAILED_POKEMON_MISSING = 2;
+  		FAILED_INSUFFICIENT_RESOURCES = 3;
+  		FAILED_POKEMON_CANNOT_EVOLVE = 4;
+  		FAILED_POKEMON_IS_DEPLOYED = 5;
+  	}
+  } 
+  
+  message TransferPokemonResponse {
+    optional int32 Status = 1;
+    optional int32 CandyAwarded = 2;
   }
 }
