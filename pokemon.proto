@@ -196,7 +196,7 @@ message ResponseEnvelop {
     optional double Latitude = 3;
     optional double Longitude = 4;
     optional string SpawnPointId = 5;
-    optional Pokemon pokemon = 7;
+    optional PokemonData pokemon = 7;
     optional int32 TimeTillHiddenMs = 11;
 
     message Pokemon {
@@ -284,36 +284,36 @@ message ResponseEnvelop {
   }
 
   message PokemonData {
-      optional fixed64 id = 1;
-    	optional PokemonId pokemon_id = 2;
-    	optional int32 cp = 3;
-    	optional int32 stamina = 4;
-    	optional int32 stamina_max = 5;
-    	optional PokemonMove move_1 = 6;
-    	optional PokemonMove move_2 = 7;
-    	optional int32 deployed_fort_id = 8;
-    	optional string owner_name = 9;
-    	optional bool is_egg = 10;
-    	optional double egg_km_walked_target = 11;
-    	optional double egg_km_walked_start = 12;
-    	optional int32 origin = 14;
-    	optional float height_m = 15;
-    	optional float weight_kg = 16;
-    	optional int32 individual_attack = 17;
-    	optional int32 individual_defense = 18;
-    	optional int32 individual_stamina = 19;
-    	optional float cp_multiplier = 20;
-    	optional ItemId pokeball = 21;
-    	optional uint64 captured_cell_id = 22;
-    	optional int32 battles_attacked = 23;
-    	optional int32 battles_defended = 24;
-    	optional string egg_incubator_id = 25;
-    	optional uint64 creation_time_ms = 26;
-    	optional int32 num_upgrades = 27;
-    	optional float additional_cp_multiplier = 28;
-    	optional int32 favorite = 29;
-    	optional string nickname = 30;
-    	optional int32 from_fort = 31;
+      optional fixed64 Id = 1;
+    	optional PokemonId PokemonId = 2;
+    	optional int32 CombatPower = 3;
+    	optional int32 Stamina = 4;
+    	optional int32 MaxStamina = 5;
+    	optional PokemonMove FirstMove = 6;
+    	optional PokemonMove SecondMove = 7;
+    	optional int32 DeployedFortId = 8;
+    	optional string OwnerName = 9;
+    	optional bool IsEgg = 10;
+    	optional double EggKmWalkedTarget = 11;
+    	optional double EggKmWalkedStart = 12;
+    	optional int32 Origin = 14;
+    	optional float HeightMetres = 15;
+    	optional float WeightKg = 16;
+    	optional int32 IndividualAttacks = 17;
+    	optional int32 IndividualDefense = 18;
+    	optional int32 IndividualStamina = 19;
+    	optional float CpMultiplier = 20;
+    	optional ItemId Pokeball = 21;
+    	optional uint64 CapturedCellId = 22;
+    	optional int32 BattlesAttacked = 23;
+    	optional int32 BattlesDefended = 24;
+    	optional string EggIncubatorId = 25;
+    	optional uint64 CreationTimeMs = 26;
+    	optional int32 NumberUpgrades = 27;
+    	optional float AdditionalCpMultiplier = 28;
+    	optional int32 Favorite = 29;
+    	optional string Nickname = 30;
+    	optional int32 FromFort = 31;
   }
 
   message Pokemon {
