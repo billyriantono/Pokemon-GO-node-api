@@ -349,6 +349,34 @@ function Pokeio() {
         });
     };
 
+    self.GetFortDetails = function (fortid, fortlat, fortlong, callback) {
+        var req = [
+            {
+                request_type: 'FORT_DETAILS',
+                request_message: proto.serialize({
+                    fort_id: fortid,
+                    fort_latitude: fortlat,
+                    fort_longitude: fortlong
+                }, 'POGOProtos.Networking.Requests.Messages.FortDetailsMessage')
+            }
+        ];
+
+        api_req(self.playerInfo.apiEndpoint, self.playerInfo.accessToken, req, function (err, f_ret) {
+            if (err) {
+                return callback(err);
+            } else if (!f_ret || !f_ret.returns || !f_ret.returns[0]) {
+                return callback('No result');
+            }
+
+            try {
+                var fortDetailResponse = proto.parse(f_ret.returns[0], 'POGOProtos.Networking.Responses.FortDetailsResponse');
+                callback(null, fortDetailResponse);
+            } catch (err) {
+                callback(err, null);
+            }
+        });
+    };
+
     //still WIP
     self.CatchPokemon = function (pokemon, normalizedHitPosition, normalizedReticleSize, spinModifier, pokeball, callback) {
         var _self$playerInfo3 = self.playerInfo;
@@ -444,6 +472,33 @@ function Pokeio() {
             try {
                 var catchPokemonResponse = proto.parse(f_ret.returns[0], 'POGOProtos.Networking.Responses.RecycleInventoryItemResponse');
                 callback(null, catchPokemonResponse);
+            } catch (err) {
+                callback(err, null);
+            }
+        });
+    };
+
+    self.PlayerUpdate = function(callback){
+        var _self$playerInfo3 = self.playerInfo;
+        var apiEndpoint = _self$playerInfo3.apiEndpoint;
+        var accessToken = _self$playerInfo3.accessToken;
+
+        var playerUpdate = {
+            'latitude' : self.playerInfo.latitude,
+            'longitude': self.playerInfo.longitude
+        };
+
+        var req = [{request_type: 1, request_message: proto.serialize(playerUpdate,'POGOProtos.Networking.Requests.Messages.PlayerUpdateMessage')}];
+
+        api_req(apiEndpoint, accessToken, req, function (err, f_ret) {
+            if (err) {
+                return callback(err);
+            } else if (!f_ret || !f_ret.returns || !f_ret.returns[0]) {
+                return callback('No result');
+            }
+            try {
+                var playerUpdateResponse = proto.parse(f_ret.returns[0],'POGOProtos.Networking.Requests.Responses.PlayerUpdateResponse');
+                callback(null, playerUpdateResponse);
             } catch (err) {
                 callback(err, null);
             }
