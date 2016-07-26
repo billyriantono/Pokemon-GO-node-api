@@ -85,7 +85,7 @@ function Pokeio() {
 
         var authData = {
             provider: self.playerInfo.provider,
-            token: proto.serialize(jwtTokenData, "POGOProtos.Networking.Envelopes.RequestEnvelope.AuthInfo.JWT")
+            token: proto.serialize(jwtTokenData, 'POGOProtos.Networking.Envelopes.RequestEnvelope.AuthInfo.JWT')
         };
 
         var envelop = {};
@@ -102,7 +102,7 @@ function Pokeio() {
         envelop.auth_info.token.unknown2 = 59;
         envelop.unknown12 = 989;
 
-        var protobuf = proto.serialize(envelop, "POGOProtos.Networking.Envelopes.RequestEnvelope");
+        var protobuf = proto.serialize(envelop, 'POGOProtos.Networking.Envelopes.RequestEnvelope');
         var options = {
             url: api_endpoint,
             body: protobuf,
@@ -118,7 +118,7 @@ function Pokeio() {
                 return callback(new Error('RPC Server offline'));
             }
             try {
-                var f_ret = proto.parse(body, "POGOProtos.Networking.Envelopes.ResponseEnvelope");
+                var f_ret = proto.parse(body, 'POGOProtos.Networking.Envelopes.ResponseEnvelope');
             } catch (e) {
                 if (e.decoded) {
                     // Truncated
@@ -190,19 +190,19 @@ function Pokeio() {
     self.GetApiEndpoint = function (callback) {
         var req = [
             {
-                request_type: "GET_PLAYER"
+                request_type: 'GET_PLAYER'
             },
             {
-                request_type: "GET_HATCHED_EGGS"
+                request_type: 'GET_HATCHED_EGGS'
             },
             {
-                request_type: "GET_INVENTORY"
+                request_type: 'GET_INVENTORY'
             },
             {
-                request_type: "CHECK_AWARDED_BADGES"
+                request_type: 'CHECK_AWARDED_BADGES'
             },
             {
-                request_type: "DOWNLOAD_SETTINGS"
+                request_type: 'DOWNLOAD_SETTINGS'
             }
         ];
         api_req(api_url, self.playerInfo.accessToken, req, function (err, f_ret) {
@@ -217,13 +217,16 @@ function Pokeio() {
     };
 
     self.GetInventory = function (callback) {
-        var req = {request_type: 'GET_INVENTORY'}
+        var req = [{request_type: 'GET_INVENTORY'}];
 
         api_req(self.playerInfo.apiEndpoint, self.playerInfo.accessToken, req, function (err, f_ret) {
             if (err) {
                 return callback(err);
+            } else if (!f_ret || !f_ret.returns || !f_ret.returns[0]) {
+                return callback('No result');
             }
-            var inventory = proto.parse(f_ret.returns[0], "POGOProtos.Networking.Responses.GetInventoryResponse");
+
+            var inventory = proto.parse(f_ret.returns[0], 'POGOProtos.Networking.Responses.GetInventoryResponse');
             return callback(null, inventory);
         });
     };
@@ -231,15 +234,17 @@ function Pokeio() {
     self.GetProfile = function (callback) {
         var req = [
             {
-                request_type: "GET_PLAYER"
+                request_type: 'GET_PLAYER'
             }
         ];
         api_req(self.playerInfo.apiEndpoint, self.playerInfo.accessToken, req, function (err, f_ret) {
             if (err) {
                 return callback(err);
+            } else if (!f_ret || !f_ret.returns || !f_ret.returns[0]) {
+                return callback('No result');
             }
 
-            var profile = proto.parse(f_ret.returns[0], "POGOProtos.Networking.Responses.GetPlayerResponse").player_data;
+            var profile = proto.parse(f_ret.returns[0], 'POGOProtos.Networking.Responses.GetPlayerResponse').player_data;
             if (profile.username) {
                 self.DebugPrint('[i] Logged in!');
             }
@@ -264,28 +269,28 @@ function Pokeio() {
 
         var req = [
             {
-                request_type: "GET_MAP_OBJECTS",
+                request_type: 'GET_MAP_OBJECTS',
                 request_message: proto.serialize({
                     cell_id: walk,
                     since_timestamp_ms: nullbytes,
                     latitude: self.playerInfo.latitude,
                     longitude: self.playerInfo.longitude
-                }, "POGOProtos.Networking.Requests.Messages.GetMapObjectsMessage")
+                }, 'POGOProtos.Networking.Requests.Messages.GetMapObjectsMessage')
             },
             {
-                request_type: "GET_HATCHED_EGGS"
+                request_type: 'GET_HATCHED_EGGS'
             },
             {
-                request_type: "GET_INVENTORY",
+                request_type: 'GET_INVENTORY',
                 request_message: proto.serialize({
                     last_timestamp_ms: Date.now().toString()
-                }, "POGOProtos.Networking.Requests.Messages.GetInventoryMessage")
+                }, 'POGOProtos.Networking.Requests.Messages.GetInventoryMessage')
             },
             {
-                request_type: "CHECK_AWARDED_BADGES"
+                request_type: 'CHECK_AWARDED_BADGES'
             },
             {
-                request_type: "DOWNLOAD_SETTINGS"
+                request_type: 'DOWNLOAD_SETTINGS'
             }
         ];
         api_req(apiEndpoint, accessToken, req, function (err, f_ret) {
@@ -314,17 +319,17 @@ function Pokeio() {
     self.GetFort = function (fortid, fortlat, fortlong, callback) {
         var req = [
             {
-                request_type: "FORT_SEARCH",
+                request_type: 'FORT_SEARCH',
                 request_message: proto.serialize({
                     fort_id: fortid,
                     player_latitude: self.playerInfo.latitude,
                     player_longitude: self.playerInfo.longitude,
                     fort_latitude: fortlat,
                     fort_longitude: fortlong
-                }, "POGOProtos.Networking.Requests.Messages.FortSearchMessage")
+                }, 'POGOProtos.Networking.Requests.Messages.FortSearchMessage')
             },
             {
-                request_type: "GET_PLAYER"
+                request_type: 'GET_PLAYER'
             }
         ];
 
@@ -342,7 +347,7 @@ function Pokeio() {
                 callback(err, null);
             }
         });
-    }
+    };
 
     //still WIP
     self.CatchPokemon = function (pokemon, normalizedHitPosition, normalizedReticleSize, spinModifier, pokeball, callback) {
@@ -352,7 +357,7 @@ function Pokeio() {
 
         var req = [
             {
-                request_type: "CATCH_POKEMON",
+                request_type: 'CATCH_POKEMON',
                 request_message: proto.serialize({
                     encounter_id: pokemon.encounter_id,
                     pokeball: pokeball,
@@ -361,7 +366,7 @@ function Pokeio() {
                     hit_pokemon: true,
                     spin_modifier: spinModifier,
                     normalized_hit_position: normalizedHitPosition,
-                }, "POGOProtos.Networking.Requests.Messages.CatchPokemonMessage")
+                }, 'POGOProtos.Networking.Requests.Messages.CatchPokemonMessage')
             }
         ];
 
@@ -372,7 +377,7 @@ function Pokeio() {
                 return callback('No result');
             }
             try {
-                var catchPokemonResponse = proto.parse(f_ret.returns[0], "POGOProtos.Networking.Responses.CatchPokemonResponse");
+                var catchPokemonResponse = proto.parse(f_ret.returns[0], 'POGOProtos.Networking.Responses.CatchPokemonResponse');
                 callback(null, catchPokemonResponse);
             } catch (err) {
                 callback(err, null);
@@ -393,7 +398,7 @@ function Pokeio() {
                     spawn_point_id: pokemon.spawn_point_id,
                     player_latitude: latitude,
                     player_longitude: longitude
-                }, "POGOProtos.Networking.Requests.Messages.EncounterMessage")
+                }, 'POGOProtos.Networking.Requests.Messages.EncounterMessage')
             }];
 
         api_req(apiEndpoint, accessToken, req, function (err, f_ret) {
@@ -421,11 +426,11 @@ function Pokeio() {
 
         var req = [
             {
-                request_type: "RECYCLE_INVENTORY_ITEM",
+                request_type: 'RECYCLE_INVENTORY_ITEM',
                 request_message: proto.serialize({
                     item_id: itemId,
                     count: count
-                }, "POGOProtos.Networking.Requests.Messages.RecycleInventoryItemMessage")
+                }, 'POGOProtos.Networking.Requests.Messages.RecycleInventoryItemMessage')
             }
         ];
 
@@ -438,6 +443,32 @@ function Pokeio() {
 
             try {
                 var catchPokemonResponse = proto.parse(f_ret.returns[0], 'POGOProtos.Networking.Responses.RecycleInventoryItemResponse');
+                callback(null, catchPokemonResponse);
+            } catch (err) {
+                callback(err, null);
+            }
+        });
+    };
+
+    self.TransferPokemon = function (pokemonId, callback) {
+        var _self$playerInfo3 = self.playerInfo;
+        var apiEndpoint = _self$playerInfo3.apiEndpoint;
+        var accessToken = _self$playerInfo3.accessToken;
+
+        var transferPokemon = {
+            'pokemon_id' : pokemonId
+        };
+
+        var req = [{request_type: 112, request_message: proto.serialize(transferPokemon,'POGOProtos.Networking.Requests.Messages.ReleasePokemonMessage')}];
+
+        api_req(apiEndpoint, accessToken, req, function (err, f_ret) {
+            if (err) {
+                return callback(err);
+            } else if (!f_ret || !f_ret.returns || !f_ret.returns[0]) {
+                return callback('No result');
+            }
+            try {
+                var catchPokemonResponse = proto.parse(f_ret.returns[0],'POGOProtos.Networking.Requests.Responses.ReleasePokemonResponse');
                 callback(null, catchPokemonResponse);
             } catch (err) {
                 callback(err, null);
