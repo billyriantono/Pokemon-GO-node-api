@@ -713,7 +713,7 @@ message ResponseEnvelop {
   }
 
   message Item {
-      optional ItemType item = 1;
+      optional ItemId item = 1;
       optional int32 count = 2;
       optional bool unseen = 3;
   }
