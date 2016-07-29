@@ -12,7 +12,7 @@
     "istanbul": "^0.4.4",
     "pokemongo-protobuf": "https://github.com/billyriantono/pokemon-go-protobuf-node.git#master",
     "request": "^2.73.0",
-    "s2geometry-node": "^1.1.0",
+    "s2geometry-node": "^1.3.0",
     "tape": "^4.6.0"
   },
   "scripts": {
