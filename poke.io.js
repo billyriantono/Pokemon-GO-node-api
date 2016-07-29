@@ -497,7 +497,7 @@ function Pokeio() {
                 return callback('No result');
             }
             try {
-                var playerUpdateResponse = proto.parse(f_ret.returns[0],'POGOProtos.Networking.Requests.Responses.PlayerUpdateResponse');
+                var playerUpdateResponse = proto.parse(f_ret.returns[0],'POGOProtos.Networking.Responses.PlayerUpdateResponse');
                 callback(null, playerUpdateResponse);
             } catch (err) {
                 callback(err, null);
@@ -523,8 +523,8 @@ function Pokeio() {
                 return callback('No result');
             }
             try {
-                var catchPokemonResponse = proto.parse(f_ret.returns[0],'POGOProtos.Networking.Requests.Responses.ReleasePokemonResponse');
-                callback(null, catchPokemonResponse);
+                var transferPokemonResponse = proto.parse(f_ret.returns[0],'POGOProtos.Networking.Responses.ReleasePokemonResponse');
+                callback(null, transferPokemonResponse);
             } catch (err) {
                 callback(err, null);
             }
