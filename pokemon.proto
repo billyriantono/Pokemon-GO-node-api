@@ -122,6 +122,11 @@ message RequestEnvelop {
   message ActionLogMessage {
   	// No message needed.
   }
+
+  message PlayerUpdateMessage {
+      optional double latitude = 1;
+      optional double longitude = 2;
+  }
 }
 
 message ResponseEnvelop {
@@ -1209,6 +1214,12 @@ message ResponseEnvelop {
     repeated int32 experience_awarded = 3;
     repeated int32 candy_awarded = 4;
     repeated int32 stardust_awarded = 5;
+  }
+
+  message PlayerUpdateResponse {
+      repeated WildPokemonProto WildPokemon = 1;
+      repeated PokemonFortProto Forts = 2;
+      optional int32 NearbyForts = 3;
   }
 
   message UseItemXpBoostResponse {
