@@ -18,7 +18,7 @@ var events = require('events');
 var ProtoBuf = require('protobufjs');
 var GoogleOAuth = require('gpsoauthnode');
 var fs = require('fs');
-var S2 = require('s2-geometry').S2;
+var S2 = require('s2geometry-node');
 
 var Logins = require('./logins');
 
@@ -50,18 +50,17 @@ function GetCoords(self) {
 }
 
 function getNeighbors(lat, lng) {
-    var level = 15;
-    var origin = S2.latLngToKey(lat, lng, level);
-    var walk = [S2.keyToId(origin)];
+    var origin = new s2.S2CellId(new s2.S2LatLng(lat, lng)).parent(15);
+    var walk = [origin.id()];
     // 10 before and 10 after
-    var next = S2.nextKey(origin);
-    var prev = S2.prevKey(origin);
+    var next = origin.next();
+    var prev = origin.prev();
     for (var i = 0; i < 10; i++) {
-        // in range(10):
-        walk.push(S2.toId(prev));
-        walk.push(S2.toId(next));
-        next = S2.nextKey(next);
-        prev = S2.prevKey(prev);
+        // in range(10)
+        walk.push(prev.id());
+        walk.push(next.id());
+        next = next.next();
+        prev = prev.prev();
     }
     return walk;
 }
